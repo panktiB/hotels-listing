@@ -13,23 +13,44 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 </head>
 
+<nav class="navbar navbar-inverse navbar-fixed-top">
+
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Pankti Bhadresa</a>
+      </div>
+
+    </div>
+  </nav>
+
 <body>
 
-  <div id="add" class="container">
+  <div class="container">
 
-    <div id="hotel-info" class="row">
+    <div clas="row">
       <div class="col-xs-12">
-        <!-- <h3 id="hotelName">name of hotel</h3> -->
-        <div id="one" class="row">
-          <!-- <div id="locality" class="col-xs-6">locality</div> -->
-          <!-- <div id="rating" class="col-xs-6">rating</div> -->
-        </div>
-        <div id="two" class="row">
-          <div id="rent" class="col-xs-6">room rent</div>
-          <div id="thumbnail" class="col-xs-6">thumbnail</div>
-        </div>
+        <h2>Check out these hotels !</h2>
+      </div>
+      <div class="col-xs-12 text-right">
+        To see the liked hotels click
+        <a href="#" class="btn btn-info btn-xs filterLike" onclick="filterLikes()">
+          <span class="glyphicon glyphicon-thumbs-up"></span> Filter
+        </a>
       </div>
     </div>
+
+
+
+    <div id="add">
+      <h2>please wait...</h2>
+
+    </div>
+
 
   </div>
 

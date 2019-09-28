@@ -1,12 +1,13 @@
-// hotelBasicInfo;
-// hotelRoomRate;
+//initialising empty arrays to store data from hotelresponse
 var basicInfoArr = [];
 var rateArr = [];
 var likeStatus = [];
 var baseUrl;
+var yes = "yeseses";
 
+//get request to fetch the json hosted over local server
 $(document).ready(function() {
-//
+
 	$.ajax({
 		url: 'http://localhost:3000/hotel-search-response',
 		dataType: 'jsonp',
@@ -22,114 +23,96 @@ function callError(error) {
 
 var basicInfoObj = {};
 
+//function populates the data arrays hotelArr, basicInfo, likeStatus
 function callSuccess(response) {
   baseUrl = response["base-url"];
   let hotelArr = response.hotels.hotel;
   let count=0;
   let row;
-  // console.log(response);
 
   for(let i=0; i<hotelArr.length; i++){
     count++;
     let basicInfo = hotelArr[i]["basic-info"];
     basicInfoArr.push(basicInfo);
     likeStatus.push(false);
-    // rateArr.push(loopPrices(hotelArr[i]["room-rates"]["room-rate"]));
     loopPrices(hotelArr[i]["room-rates"]["room-rate"]);
-    // console.log(hotelArr[i]["basic-info"]);
-    // document.getElementById('hotelName').innerHTML = hotelArr[i]["basic-info"]["hotel-info:hotel-name"];
-    // locality = hotelArr[i]["basic-info"]["hotel-info:locality"];
-    // rating = hotelArr[i]["basic-info"]["hotel-info:star-rating"];
-    // prices = hotelArr[i]["room-rates"]["room-rate"];
-    // // console.log(name, locality, rating);
-    // let min = loopPrices(prices);
-    //
-    // row = "<div class='row'><div class='col-md-12'>" + name + locality + rating + '    '+ min + "</div></div>"
-    //
-    // elt.innerHTML += innerHTML;
+
   }
 
+  //function to populate the data to html
   populatepage();
 
 }
 
-function toggleLike(event) {
-  console.log(event.target.innerHTML);
-  if (event.target.innerHTML=='false') {
-    event.target.innerHTML = true;
-  } else if(event.target.innerHTML=='true') {
-    event.target.innerHTML = false;
-  }
+
+function filterLikes() {
+  var rows = document.getElementsByClassName('row');
+
+  var filtered = $('.row').filter(function() {
+    return !$(this).children('.active').length;
+  });
+  console.log(filtered[0].children);
 }
 
+// room rates are in an array, function loops over it and populates rateArr
 function loopPrices(arr) {
   let minprice = 0;
-  // let rateArr = [];
   for(let i=0; i< arr.length; i++) {
-    // console.log(arr[i]["rate-breakdown"]["common:rate"]["common:pricing-elements"]["common:pricing-element"]);
     let temp = arr[i]["rate-breakdown"]["common:rate"]["common:pricing-elements"]["common:pricing-element"];
-    // console.log(temp);
     rateArr.push(temp);
-    // rateArr.push(loopPrices(hotelArr[i]["room-rates"]["room-rate"]));
-    // temp.forEach(function (item) {
-    //   // console.log(item["common:amount"]);
-    //   minprice += item["common:amount"];
-    // })
-    // console.log(minprice);
   }
-  // return rateArr;
 }
 
+//populate the html
 function populatepage() {
   let elt = document.getElementById('add');
-  var start = "<div class='row'><div class='col-xs-12'>";
+  var start = "<div class='row'>";
   let innerHTML = elt.innerHTML;
-  console.log(basicInfoArr[0]);
-  console.log(rateArr[0]);
-  // var hotelName = '<h3>';
-  // var localityName = "<div class='col-xs-6'>";
-  // var rating = "<div class='col-xs-6'>";
-  // var rent = "<div class='col-xs-6'>";
-  // basicInfoArr.forEach(function (item) {
-  //
-  // });
-  for(let i=0; i<10; i++) {
-    // var start = "<div class='row'><div class='col-xs-12'>";
-    // <a target="_blank" href="https://www.cleartrip.com/hotels/info/shivas-gateway-1361272/1361/1361272/images/LRM_EXPORT_20160903_230653_tn.jpg">
-    //     <img src="img-try.jpg" alt="Forest">
-    //   </a>
+
+
+  for(let i=0; i< 300; i++) {
+
     var hotelName = '<h3>';
-    var localityName = "<div class='col-xs-6'>";
-    var rating = "<div class='col-xs-6'>";
-    var rent = "<div class='col-xs-6'>";
-    var thumbnail = "<a target='_blank' href='https://www.cleartrip.com'" + baseUrl + basicInfoArr[i]["thumb-nail-image"] + "'><img src='./images/web-img.png' alt='cleartrip image'></a>";
+    var localityName = "<div class='col-xs-6'>Locality - ";
+    var rating = "<div class='col-xs-4 offset-1 text-center'> Rating - ";
+    var rent = "<div class='col-xs-4'> minimum rate per night - ";
+    var thumbnail = "<div class='col-xs-4 text-right'><a target='_blank' href='https://www.cleartrip.com'" + baseUrl + basicInfoArr[i]["thumb-nail-image"] + "'><img src='./images/web-img.png' alt='cleartrip image'></a></div>";
     hotelName += basicInfoArr[i]["hotel-info:hotel-name"] + "</h3>";
     localityName += basicInfoArr[i]["hotel-info:locality"] + "</div>";
     rating += basicInfoArr[i]["hotel-info:star-rating"] + "</div>";
 
-    var like = "<div class='col-xs-6' onclick='toggleLike(event)'>";
-    like += likeStatus[i] + "</div>"
-
-    //document.getElementById('one').innerHTML = hotelName + localityName;
+    var like = "<div class='col-xs-6 text-right'><button type='button'class='btn btn-primary btn-sm likebtn'><span class='glyphicon glyphicon-thumbs-up'></span></button>";
+    like += "</div>"
     let minprice = 0;
     rateArr[i].forEach(function (item) {
       minprice += item["common:amount"];
     });
+
+    rent += minprice + "</div>"
+
+    start += hotelName + localityName + like + rent + rating + thumbnail;
+
     if(i==9) {
-      start += hotelName + localityName + rating + "min price is " + minprice + "</div></div>";
+      start += "</div></div>";
     }
     else {
-      start += hotelName + localityName + rating + "min price is " + minprice + like + thumbnail + "</div></div><div class='row'><div class='col-xs-12'>";
+      start += "</div></div><div class='row'><div class='col-xs-12'>";
     }
 
 
 
 
-
+    //rows are appended to html
     elt.innerHTML = start;
-    // start = "<div class='row'><div class='col-xs-12'>";
+
   }
 
+  // button functionality to ensure that a liked hotel remains 'liked'
+  $('.btn').click(function(e) {
+
+      e.preventDefault();
+      $(this).addClass('active');
+  })
 
 
 }
