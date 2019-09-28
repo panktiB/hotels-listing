@@ -3,7 +3,6 @@ var basicInfoArr = [];
 var rateArr = [];
 var likeStatus = [];
 var baseUrl;
-var yes = "yeseses";
 
 //get request to fetch the json hosted over local server
 $(document).ready(function() {
@@ -46,12 +45,26 @@ function callSuccess(response) {
 
 
 function filterLikes() {
-  var rows = document.getElementsByClassName('row');
+  if(document.getElementsByClassName('filterLike')[0].classList.contains('active')) {
+    console.log('active');
 
+  }
+  var rows = document.getElementsByClassName('row');
+  var activerow = '';
+  // console.log(rows);
   var filtered = $('.row').filter(function() {
-    return !$(this).children('.active').length;
+    return !$(this).children('active').length;
   });
-  console.log(filtered[0].children);
+  // console.log(filtered);
+  for(let i=0; i< filtered.length; i++) {
+    // console.log(filtered[i].innerHTML);
+    if(filtered[i].classList.contains('active')) {
+      activerow += filtered[i].innerHTML;
+
+    }
+
+  }
+  document.getElementById('add').innerHTML = activerow;
 }
 
 // room rates are in an array, function loops over it and populates rateArr
@@ -66,10 +79,10 @@ function loopPrices(arr) {
 //populate the html
 function populatepage() {
   let elt = document.getElementById('add');
-  var start = "<div class='row'>";
+  var start = "<div class='row filterFun'>";
   let innerHTML = elt.innerHTML;
 
-
+  // creating rows and columns for each data set
   for(let i=0; i< 300; i++) {
 
     var hotelName = '<h3>';
@@ -96,7 +109,7 @@ function populatepage() {
       start += "</div></div>";
     }
     else {
-      start += "</div></div><div class='row'><div class='col-xs-12'>";
+      start += "</div></div><div class='row filterFun'>";
     }
 
 
@@ -112,6 +125,7 @@ function populatepage() {
 
       e.preventDefault();
       $(this).addClass('active');
+      $(this).parent().parent().addClass('active');
   })
 
 
