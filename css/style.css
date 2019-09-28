@@ -6,3 +6,23 @@
 	font-family: 'Titillium Web', sans-serif;
 	font-size: 18px;
 }
+
+.hotel-info {
+	border: 1px solid black;
+}
+
+img {
+	height: 10px;
+	width: 20px;
+}
+img {
+  border: 1px solid #ddd; /* Gray border */
+  border-radius: 4px;  /* Rounded border */
+  padding: 5px; /* Some padding */
+  width: 50px; /* Set a small width */
+	height: 20px;
+}
+/* Add a hover effect (blue shadow) */
+img:hover {
+  box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+}
