@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html lang="en">
 <head>
   <title>Bootstrap Example</title>
@@ -55,6 +55,61 @@
   </div>
 
   <script src="js/app.js"></script>
+
+
+</body>
+</html>-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Hotels</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Titillium+Web&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+</head>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Pankti Bhadresa</a>
+      </div>
+
+    </div>
+  </nav>
+
+<body>
+
+  <div class="container">
+
+	<div id="list"></div>
+
+
+	<div class="cardHTML"></div>
+
+	<div style="text-align:center;">
+		<input type="button" id="first" onclick="firstPage()" value="first" />
+		<input type="button" id="next" onclick="nextPage()" value="next" />
+		<input type="button" id="previous" onclick="previousPage()" value="previous" />
+		<input type="button" id="last" onclick="lastPage()" value="last" />
+	</div>
+
+  </div>
+
+  <script src="js/helper.js"></script>
 
 
 </body>
