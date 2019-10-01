@@ -13,12 +13,33 @@ var currentPage = 1;
 var numberPerPage = 10;
 var numberOfPages = 0;
 
+var filteredHotelNames = new Array();
+
 var baseurl = data["hotel-search-response"]["base-url"];
 
 //console.log(hotelsArr[0]["room-rates"]);
 //console.log(hotelsArr[0]["room-rates"]["room-rate"]);
 //console.log(hotelsArr[0]["room-rates"]["room-rate"][0]["rate-breakdown"]["common:rate"]["common:pricing-elements"]["common:pricing-element"]); //array of the actual prices for 1 this should added up for cost
 //console.log(hotelsArr[0]["room-rates"]["room-rate"][1]);
+
+$(document).ready(function() {
+
+	$.ajax({
+		url: 'http://localhost:3000/hotel-search-response',
+		dataType: 'jsonp',
+		success: (response) => callSuccess(response),
+    error: (error) => callError(error)
+
+	 });
+})
+function callSuccess(response) {
+  console.log(response);
+  data = response;
+  console.log(data);
+}
+function callError(error) {
+  console.log(error);
+}
 
 // assigns the number of pages to the variable
 function numOfPages() {
@@ -73,22 +94,31 @@ function getDetails() {
 
   // assign the correct value data to the variable
   for(let i=0; i< pageList.length; i++) {
+    // console.log(pageList[i]);
    hotelName = pageList[i]["basic-info"]["hotel-info:hotel-name"];
    rating = pageList[i]["basic-info"]["hotel-info:star-rating"];
    locality = pageList[i]["basic-info"]["hotel-info:locality"];
    thumbnailUrl = pageList[i]["basic-info"]["hotel-info:thumb-nail-image"];
+
    //console.log(hotelName, rating, locality, thumbnailUrl);
 
    // calling the getRate(i) function to fetch the room rent details
    totalCost = getRate(i);
 
+   if(isNaN(totalCost)) {
+     totalCost = "unknown";
+   }
+   else {
+     totalCost = 'Rs. ' + totalCost;
+   }
+
    // creating and assigning local variables with HTML content to keep the scope of each iteration separate
    let hotelNameHTML = "<h3 class='card-title'>" + hotelName + "</h3>";
    let starRating = "<div>" + rating + "</div>";
    let localityHTML = "<div>" + locality + "</div>";
-   let costHTML = "<div>Rs." + totalCost + "</div>";
+   let costHTML = "<div>" + totalCost + "</div>";
    let likeButton = "<button type='button'class='btn btn-primary btn-sm likebtn' onclick='hotelLiked(event)'><span class='glyphicon glyphicon-thumbs-up'></span></button>";
-   let thumbnailHTML = "<a target='_blank' href='https://www.cleartrip.com'" + baseurl + thumbnailUrl + "><img src=https://www.cleartrip.com'" + baseurl + thumbnailUrl + "alt='hotelimg'></a>";
+   let thumbnailHTML = "<a target='_blank' href='https://www.cleartrip.com'" + baseurl + thumbnailUrl + "><img src='https://www.cleartrip.com'" + baseurl + thumbnailUrl + " salt='hotelimg'></a>";
 
    hotelcardHTML += "<div class='card'><div class='row no-gutters'><div class='col-xs-2'>" + thumbnailHTML + "</div><div class='col-xs-8'><div class='card-body'>" + hotelNameHTML + starRating + localityHTML + "</div></div><div class='col-xs-2 text-right'><div class='card-body'><br>" + costHTML + "<small>1 room/night</small><div>" + likeButton + "</div></div></div></div></div>"
 
@@ -125,6 +155,11 @@ function getRate(i) {
    return cost.toFixed(2);
 }
 
+function filterLikes() {
+  pageList = filteredHotelNames;
+  // $(button span).innerHTML;
+  getDetails();
+}
 
 // keeping the value of currentPage in check and making the buttons disabled based on situation
 function check() {
@@ -144,16 +179,44 @@ window.onload = load;
 
 
 function hotelLiked(event) {
-console.log(event);
-console.log(event.target);
-//console.log(event.target.parentNode.parentNode.parentNode);
-//console.log(event.target.parentNode.parentNode.previousSibling);
-console.log(event.target.parentNode.parentNode);
+  // console.log(event.srcElement.innerHTML);
+  let likedHotelName;
+  var spanSibling = event.target.parentNode.parentNode.parentNode.parentNode.previousSibling;
+  var buttonSibling =  event.target.parentNode.parentNode.parentNode.previousSibling;
+  if(event.srcElement.innerHTML) {
+    // console.log(buttonSibling.children[0].children[0].innerHTML);
+    likedHotelName = buttonSibling.children[0].children[0].innerHTML;
+  } else {
+    // console.log(spanSibling.children[0].children[0].innerHTML);
+    likedHotelName = spanSibling.children[0].children[0].innerHTML;
+  }
 
-console.log(event.target.parentNode.parentNode.previousSibling.innerHTML);
-var hotelname = event.target.parentNode.parentNode.previousSibling.innerHTML;
-console.log(hotelname.split('|'));
-console.log(hotelname[0]);
+  // console.log(likedHotelName);
+
+  var temp = hotelsArr.filter(function (element) {
+    return element["basic-info"]["hotel-info:hotel-name"] == likedHotelName;
+  });
+
+  // console.log(temp[0]);
+  filteredHotelNames.push(temp[0]);
+  filteredHotelNames.forEach(function (item) {
+    // console.log(item);
+    item.liked = true;
+  });
+
+  // (2>1 && 2<3) ? console.log('hehehe') : false;
+
+  // console.log(filteredHotelNames);
+
+  // console.log(event.target);
+  //console.log(event.target.parentNode.parentNode.parentNode);
+  //console.log(event.target.parentNode.parentNode.previousSibling);
+  // console.log(event.target.parentNode.parentNode);
+
+  // console.log(event.target.parentNode.parentNode.previousSibling.innerHTML);
+  // var hotelname = event.target.parentNode.parentNode.previousSibling.innerHTML;
+  // console.log(hotelname.split('|'));
+  // console.log(hotelname[0]);
 }
 
 /*
