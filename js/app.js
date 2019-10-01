@@ -146,6 +146,8 @@ var pageList = new Array();
 var numberOfPages = 0;
 var filteredHotelNames = new Array();
 
+var filterApplied = false;
+
 $(document).ready(function() {
 
 	$.ajax({
@@ -184,7 +186,8 @@ function callError(error) {
 function numOfPages() {
 	currency = data["currency"];
 	baseurl = data["base-url"];
-  numberOfPages = Math.ceil(hotelsArr.length / numberPerPage)
+  numberOfPages = Math.ceil(hotelsArr.length / numberPerPage);
+
 }
 
 // function triggered on click of next
@@ -209,6 +212,11 @@ function firstPage() {
 function lastPage() {
     currentPage = numberOfPages;
     loadList();
+}
+
+function pageChanged(event) {
+	currentPage = event.target.innerHTML;
+	loadList();
 }
 
 // loads the hotels list according to the page numbers
@@ -242,14 +250,14 @@ function getDetails() {
      totalCost = "unknown";
    }
    else {
-     totalCost = 'Rs. ' + totalCost;
+     totalCost = 'Rs. ' + totalCost + '/-';
    }
 
    // creating and assigning local variables with HTML content to keep the scope of each iteration separate
-   let hotelNameHTML = "<h3 class='card-title'>" + hotelName + "</h3>";
-   let starRating = "<div>" + rating + "</div>";
-   let localityHTML = "<div>" + locality + "</div>";
-   let costHTML = "<div>" + totalCost + "</div>";
+   let hotelNameHTML = "<h3 class='card-title bold'>" + hotelName + "</h3>";
+   let starRating = "<div>Hotel Rating - " + rating + "</div>";
+   let localityHTML = "<div><span class='glyphicon glyphicon-map-marker'></span>" + locality + "</div>";
+   let costHTML = "<div class='bold'>" + totalCost + "</div>";
    let likeButton = "<button type='button'class='btn btn-primary btn-sm likebtn' onclick='hotelLiked(event)'><span class='glyphicon glyphicon-thumbs-up'></span></button>";
    let thumbnailHTML = "<a target='_blank' href='https://www.cleartrip.com'" + baseurl + thumbnailUrl + "><img src='https://www.cleartrip.com'" + baseurl + thumbnailUrl + " salt='hotelimg'></a>";
 
@@ -290,16 +298,25 @@ function getRate(i) {
 
 function filterLikes() {
   pageList = filteredHotelNames;
+	filterApplied = true;
   // $(button span).innerHTML;
+	check();
   getDetails();
+}
+
+function removeLikes() {
+	pageList = hotelsArr;
+	filterApplied = false;
+	check();
+	loadList();
 }
 
 // keeping the value of currentPage in check and making the buttons disabled based on situation
 function check() {
-    document.getElementById("next").disabled = currentPage == numberOfPages ? true : false;
-    document.getElementById("previous").disabled = currentPage == 1 ? true : false;
-    document.getElementById("first").disabled = currentPage == 1 ? true : false;
-    document.getElementById("last").disabled = currentPage == numberOfPages ? true : false;
+    document.getElementById("next").disabled = (currentPage == numberOfPages || filterApplied) ? true : false;
+    document.getElementById("previous").disabled = (currentPage == 1 || filterApplied) ? true : false;
+    document.getElementById("first").disabled = (currentPage == 1 || filterApplied) ? true : false;
+    document.getElementById("last").disabled = (currentPage == numberOfPages || filterApplied) ? true : false;
 }
 
 // calling the functions to calculate the number of pages and load first set of data
